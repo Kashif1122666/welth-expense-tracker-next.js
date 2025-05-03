@@ -167,6 +167,18 @@ export function TransactionTable({ transactions }) {
     data: deleted,
   } = useFetch(bulkDeleteTransactions);
 
+  // const handleBulkDelete = async () => {
+  //   if (
+  //     !window.confirm(
+  //       `Are you sure you want to delete ${selectedIds.length} transactions?`
+  //     )
+  //   )
+  //     return;
+
+  //   deleteFn(selectedIds);
+  // };
+
+
   const handleBulkDelete = async () => {
     if (
       !window.confirm(
@@ -174,10 +186,19 @@ export function TransactionTable({ transactions }) {
       )
     )
       return;
-
+  
+    // Perform the delete action
     deleteFn(selectedIds);
   };
-
+  
+  useEffect(() => {
+    if (deleted && !deleteLoading) {
+      toast.success("Transactions deleted successfully");
+      // Clear the selected transactions after deletion
+      setSelectedIds([]);
+    }
+  }, [deleted, deleteLoading]);
+  
   useEffect(() => {
     if (deleted && !deleteLoading) {
       toast.error("Transactions deleted successfully");
@@ -250,13 +271,13 @@ export function TransactionTable({ transactions }) {
 
           {/* Bulk Actions */}
           {selectedIds.length > 0 && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 bg-red-700 text-white">
               <Button
                 variant="destructive"
                 size="sm"
                 onClick={handleBulkDelete}
               >
-                <Trash className="h-4 w-4 mr-2" />
+                <Trash className="h-4 w-4 mr-2  text-white" />
                 Delete Selected ({selectedIds.length})
               </Button>
             </div>
@@ -281,7 +302,7 @@ export function TransactionTable({ transactions }) {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[50px]">
-                <Checkbox
+                <Checkbox 
                   checked={
                     selectedIds.length === paginatedTransactions.length &&
                     paginatedTransactions.length > 0
