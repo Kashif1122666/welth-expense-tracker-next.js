@@ -39,7 +39,7 @@ export function AddTransactionForm({
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const editId = searchParams.get("edit");
+  const editId = searchParams?.get("edit");
 
   const {
     register,
